@@ -1,0 +1,105 @@
+- STAGE: Before start
+  args: []
+  config_dir: ''
+  del_after:
+  - tmp/hammer_ld4qjfoh
+  - .bin_reads
+  - tmp/spades_gwpbns57
+  - configs
+  - tmp/hammer_y6m5c4co
+  - .bin_reads
+  - tmp/spades_m65uys4h
+  - configs
+  output_files: []
+  path: 'true'
+  short_name: before_start
+- STAGE: Assembling
+  args: []
+  config_dir: ''
+  del_after: []
+  output_files: []
+  path: 'true'
+  short_name: as_start
+- STAGE: K21
+  args:
+  - /home/kostya/DD_2024_private/hw2/spades/K21/configs/config.info
+  config_dir: K21
+  del_after: []
+  output_files: []
+  path: /home/kostya/miniconda3/envs/spades_env/bin/spades-core
+  short_name: k21
+- STAGE: K33
+  args:
+  - /home/kostya/DD_2024_private/hw2/spades/K33/configs/config.info
+  config_dir: K33
+  del_after: []
+  output_files: []
+  path: /home/kostya/miniconda3/envs/spades_env/bin/spades-core
+  short_name: k33
+- STAGE: K55
+  args:
+  - /home/kostya/DD_2024_private/hw2/spades/K55/configs/config.info
+  config_dir: K55
+  del_after: []
+  output_files: []
+  path: /home/kostya/miniconda3/envs/spades_env/bin/spades-core
+  short_name: k55
+- STAGE: Copy files
+  args:
+  - /home/kostya/miniconda3/envs/spades_env/share/spades/spades_pipeline/scripts/copy_files.py
+  - /home/kostya/DD_2024_private/hw2/spades/K55/before_rr.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/before_rr.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/K55/assembly_graph_after_simplification.gfa
+  - /home/kostya/DD_2024_private/hw2/spades/assembly_graph_after_simplification.gfa
+  - /home/kostya/DD_2024_private/hw2/spades/K55/final_contigs.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/contigs.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/K55/first_pe_contigs.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/first_pe_contigs.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/K55/strain_graph.gfa
+  - /home/kostya/DD_2024_private/hw2/spades/strain_graph.gfa
+  - /home/kostya/DD_2024_private/hw2/spades/K55/scaffolds.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/scaffolds.fasta
+  - /home/kostya/DD_2024_private/hw2/spades/K55/scaffolds.paths
+  - /home/kostya/DD_2024_private/hw2/spades/scaffolds.paths
+  - /home/kostya/DD_2024_private/hw2/spades/K55/assembly_graph_with_scaffolds.gfa
+  - /home/kostya/DD_2024_private/hw2/spades/assembly_graph_with_scaffolds.gfa
+  - /home/kostya/DD_2024_private/hw2/spades/K55/assembly_graph.fastg
+  - /home/kostya/DD_2024_private/hw2/spades/assembly_graph.fastg
+  - /home/kostya/DD_2024_private/hw2/spades/K55/final_contigs.paths
+  - /home/kostya/DD_2024_private/hw2/spades/contigs.paths
+  config_dir: ''
+  del_after:
+  - .bin_reads
+  - tmp/spades_jztn2eyx
+  output_files: []
+  path: /home/kostya/miniconda3/envs/spades_env/bin/python3
+  short_name: copy_files
+- STAGE: Assembling
+  args: []
+  config_dir: ''
+  del_after: []
+  output_files: []
+  path: 'true'
+  short_name: as_finish
+- STAGE: Breaking scaffolds
+  args:
+  - /home/kostya/miniconda3/envs/spades_env/share/spades/spades_pipeline/scripts/breaking_scaffolds_script.py
+  - --result_scaffolds_filename
+  - /home/kostya/DD_2024_private/hw2/spades/scaffolds.fasta
+  - --misc_dir
+  - /home/kostya/DD_2024_private/hw2/spades/misc
+  - --threshold_for_breaking_scaffolds
+  - '3'
+  config_dir: ''
+  del_after: []
+  output_files: []
+  path: /home/kostya/miniconda3/envs/spades_env/bin/python3
+  short_name: bs
+- STAGE: Terminate
+  args: []
+  config_dir: ''
+  del_after:
+  - configs
+  output_files: []
+  path: 'true'
+  short_name: terminate

@@ -1,0 +1,10 @@
+set -e
+true
+true
+/home/kostya/miniconda3/envs/spades_env/bin/spades-core /home/kostya/DD_2024_private/hw2/spades/K21/configs/config.info
+/home/kostya/miniconda3/envs/spades_env/bin/spades-core /home/kostya/DD_2024_private/hw2/spades/K33/configs/config.info
+/home/kostya/miniconda3/envs/spades_env/bin/spades-core /home/kostya/DD_2024_private/hw2/spades/K55/configs/config.info
+/home/kostya/miniconda3/envs/spades_env/bin/python3 /home/kostya/miniconda3/envs/spades_env/share/spades/spades_pipeline/scripts/copy_files.py /home/kostya/DD_2024_private/hw2/spades/K55/before_rr.fasta /home/kostya/DD_2024_private/hw2/spades/before_rr.fasta /home/kostya/DD_2024_private/hw2/spades/K55/assembly_graph_after_simplification.gfa /home/kostya/DD_2024_private/hw2/spades/assembly_graph_after_simplification.gfa /home/kostya/DD_2024_private/hw2/spades/K55/final_contigs.fasta /home/kostya/DD_2024_private/hw2/spades/contigs.fasta /home/kostya/DD_2024_private/hw2/spades/K55/first_pe_contigs.fasta /home/kostya/DD_2024_private/hw2/spades/first_pe_contigs.fasta /home/kostya/DD_2024_private/hw2/spades/K55/strain_graph.gfa /home/kostya/DD_2024_private/hw2/spades/strain_graph.gfa /home/kostya/DD_2024_private/hw2/spades/K55/scaffolds.fasta /home/kostya/DD_2024_private/hw2/spades/scaffolds.fasta /home/kostya/DD_2024_private/hw2/spades/K55/scaffolds.paths /home/kostya/DD_2024_private/hw2/spades/scaffolds.paths /home/kostya/DD_2024_private/hw2/spades/K55/assembly_graph_with_scaffolds.gfa /home/kostya/DD_2024_private/hw2/spades/assembly_graph_with_scaffolds.gfa /home/kostya/DD_2024_private/hw2/spades/K55/assembly_graph.fastg /home/kostya/DD_2024_private/hw2/spades/assembly_graph.fastg /home/kostya/DD_2024_private/hw2/spades/K55/final_contigs.paths /home/kostya/DD_2024_private/hw2/spades/contigs.paths
+true
+/home/kostya/miniconda3/envs/spades_env/bin/python3 /home/kostya/miniconda3/envs/spades_env/share/spades/spades_pipeline/scripts/breaking_scaffolds_script.py --result_scaffolds_filename /home/kostya/DD_2024_private/hw2/spades/scaffolds.fasta --misc_dir /home/kostya/DD_2024_private/hw2/spades/misc --threshold_for_breaking_scaffolds 3
+true

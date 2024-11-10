@@ -1,0 +1,65 @@
+ý---
+max read length: 90
+nomerge max read length: 90
+average read length: 90
+average coverage: 77.5897
+libraries:
+  - type:            paired-end
+    number:          1
+    orientation:     fr
+    left reads:
+      - '/home/kostya/DD_2024_private/hw2/SRR292678_1.fastq'
+    right reads:
+      - '/home/kostya/DD_2024_private/hw2/SRR292678_2.fastq'
+    data:
+      unmerged read length: 90
+      merged read length: 0
+      insert size mean: 468.965
+      insert size deviation: 14.7004
+      insert size left quantile: 450
+      insert size right quantile: 486
+      insert size median: 470
+      insert size mad: 8
+      insert size distribution: { 411: 480, 412: 475, 413: 659, 414: 679, 
+                                  415: 757, 416: 903, 417: 1006, 418: 1127, 
+                                  419: 1347, 420: 1532, 421: 1757, 422: 2024, 
+                                  423: 2348, 424: 2676, 425: 3024, 426: 3424, 
+                                  427: 3781, 428: 4297, 429: 4731, 430: 5243, 
+                                  431: 5629, 432: 6437, 433: 6896, 434: 7290, 
+                                  435: 7788, 436: 8560, 437: 9090, 438: 10094, 
+                                  439: 10363, 440: 11286, 441: 11657, 442: 12627, 
+                                  443: 13308, 444: 14417, 445: 15277, 446: 16138, 
+                                  447: 17534, 448: 18608, 449: 20404, 450: 22032, 
+                                  451: 24111, 452: 26158, 453: 28745, 454: 31810, 
+                                  455: 35298, 456: 38504, 457: 42671, 458: 46753, 
+                                  459: 51501, 460: 55794, 461: 60807, 462: 65578, 
+                                  463: 69495, 464: 74524, 465: 77958, 466: 81300, 
+                                  467: 85305, 468: 87492, 469: 89209, 470: 90340, 
+                                  471: 89889, 472: 90045, 473: 88825, 474: 87053, 
+                                  475: 84706, 476: 80810, 477: 77451, 478: 73514, 
+                                  479: 69154, 480: 65770, 481: 61501, 482: 56932, 
+                                  483: 52410, 484: 48402, 485: 44237, 486: 40441, 
+                                  487: 36820, 488: 33051, 489: 29796, 490: 26307, 
+                                  491: 23333, 492: 20556, 493: 17494, 494: 15381, 
+                                  495: 13315, 496: 11247, 497: 9372, 498: 7900, 
+                                  499: 6419, 500: 5311, 501: 4366, 502: 3602, 
+                                  503: 2799, 504: 2383, 505: 1746, 506: 1406, 
+                                  507: 1062, 508: 855, 509: 622, 510: 458, 
+                                  511: 355, 512: 246, 513: 187, 514: 129, 
+                                  515: 111, 516: 77, 517: 41, 518: 35, 
+                                  519: 26, 520: 20, 521: 14, 522: 11, 523: 7, 
+                                  524: 3, 525: 4, 526: 2, 527: 3, 528: 2, 
+                                  529: 3 }
+      pi threshold:    0
+      binary reads info:
+        binary converted: true
+        bin reads info file: '/home/kostya/DD_2024_private/hw2/spades/.bin_reads/INFO_0'
+        paired read prefix: '/home/kostya/DD_2024_private/hw2/spades/.bin_reads/paired_0'
+        merged read prefix: '/home/kostya/DD_2024_private/hw2/spades/.bin_reads/merged_0'
+        single read prefix: '/home/kostya/DD_2024_private/hw2/spades/.bin_reads/single_0'
+        chunk num:       8
+      single reads mapped: false
+      library index:   0
+      number of reads: 12222224
+      total nucleotides: 1100000160
+...

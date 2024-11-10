@@ -1,0 +1,34 @@
+Command line: /home/kostya/miniconda3/envs/spades_env/bin/spades.py	-1	/home/kostya/DD_2024_private/hw2/SRR292678_1.fastq	-2	/home/kostya/DD_2024_private/hw2/SRR292678_2.fastq	-o	/home/kostya/DD_2024_private/hw2/spades	--only-assembler	
+
+System information:
+  SPAdes version: 4.0.0
+  Python version: 3.13.0
+  OS: Linux-5.15.153.1-microsoft-standard-WSL2-x86_64-with-glibc2.39
+
+Output dir: /home/kostya/DD_2024_private/hw2/spades
+Mode: ONLY assembling (without read error correction)
+Debug mode is turned OFF
+
+Dataset parameters:
+  Standard mode
+  For multi-cell/isolate data we recommend to use '--isolate' option; for single-cell MDA data use '--sc'; for metagenomic data use '--meta'; for RNA-Seq use '--rna'.
+  Reads:
+    Library number: 1, library type: paired-end
+      orientation: fr
+      left reads: ['/home/kostya/DD_2024_private/hw2/SRR292678_1.fastq']
+      right reads: ['/home/kostya/DD_2024_private/hw2/SRR292678_2.fastq']
+      interlaced reads: not specified
+      single reads: not specified
+      merged reads: not specified
+Assembly parameters:
+  k: automatic selection based on read length
+  Repeat resolution is enabled
+  Mismatch careful mode is turned OFF
+  MismatchCorrector will be SKIPPED
+  Coverage cutoff is turned OFF
+  Assembly graph output will use GFA v1.2 format
+Other parameters:
+  Dir for temp files: /home/kostya/DD_2024_private/hw2/spades/tmp
+  Threads: 16
+  Memory limit (in Gb): 3
+
