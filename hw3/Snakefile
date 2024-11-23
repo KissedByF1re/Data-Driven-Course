@@ -1,0 +1,220 @@
+import pandas as pd
+import json
+import os
+from collections import defaultdict
+from pprint import pprint
+from itertools import chain
+
+# \__UTILS
+
+def extract_filename(filepath, new_extension=None):
+    base_name = os.path.basename(filepath)
+    name_without_ext = os.path.splitext(base_name)[0]
+    return name_without_ext + (new_extension or "")
+
+# UTILS__/
+
+
+# \__INIT
+
+ROOT_DIR = "/Users/user/Univ/Data_Driven/DD_2024_private/hw3"
+print(f"{ROOT_DIR=}")
+
+with open(os.path.join(ROOT_DIR, "params.json"), "r") as f:
+    pipline_params = json.load(f)
+
+TEST_OUTPUT_DIR = os.path.join(ROOT_DIR, pipline_params["global_params"]["outdir"])
+print(f"{TEST_OUTPUT_DIR=}")
+
+
+samples = pd.read_csv(os.path.join(ROOT_DIR, "samples.csv")).set_index("sample_id", drop=False)
+
+
+all_output_files_dict = defaultdict(lambda: defaultdict(dict))
+
+for _, row in samples.iterrows():
+    sample_id = row['sample_id']
+    read_1 = os.path.join(ROOT_DIR, row['read_1'])
+    read_2 = os.path.join(ROOT_DIR, row['read_2'])
+    read_1_name = extract_filename(extract_filename(read_1))
+    read_2_name = extract_filename(extract_filename(read_2))
+    if pd.isna(row['assembly']):
+        assembly = False
+    else:
+        assembly = row['assembly']
+    
+    all_output_files_dict[sample_id]["read_1"] = read_1
+    all_output_files_dict[sample_id]["read_2"] = read_2
+    all_output_files_dict[sample_id]["read_1_name"] = read_1_name
+    all_output_files_dict[sample_id]["read_2_name"] = read_2_name
+    all_output_files_dict[sample_id]["assembly"] = assembly
+    
+    # fastqc
+    all_output_files_dict[sample_id]["fastqc"]["conda"] = os.path.join(ROOT_DIR, "envs/fastqc.yaml")
+    all_output_files_dict[sample_id]["fastqc"]["outdir"] = f"{TEST_OUTPUT_DIR}/{sample_id}/fastqc"
+    all_output_files_dict[sample_id]["fastqc"]["r1_zip"] = f"{TEST_OUTPUT_DIR}/{sample_id}/fastqc/{read_1_name}_fastqc.zip"
+    all_output_files_dict[sample_id]["fastqc"]["r2_zip"] = f"{TEST_OUTPUT_DIR}/{sample_id}/fastqc/{read_2_name}_fastqc.zip"
+    all_output_files_dict[sample_id]["fastqc"]["r1_html"] = f"{TEST_OUTPUT_DIR}/{sample_id}/fastqc/{read_1_name}_fastqc.html"
+    all_output_files_dict[sample_id]["fastqc"]["r2_html"] = f"{TEST_OUTPUT_DIR}/{sample_id}/fastqc/{read_2_name}_fastqc.html"
+    
+    all_output_files_dict[sample_id]["fastqc"]["run_all_input"] = [
+        all_output_files_dict[sample_id]["fastqc"]["r1_zip"], all_output_files_dict[sample_id]["fastqc"]["r2_zip"], 
+        all_output_files_dict[sample_id]["fastqc"]["r1_html"], all_output_files_dict[sample_id]["fastqc"]["r2_html"],
+    ]
+
+    # spades
+    all_output_files_dict[sample_id]["spades"]["conda"] = os.path.join(ROOT_DIR, "envs/spades.yaml")
+    all_output_files_dict[sample_id]["spades"]["outdir"] = f"{TEST_OUTPUT_DIR}/{sample_id}/spades"
+    all_output_files_dict[sample_id]["spades"]["scaffolds_fasta"] = f"{TEST_OUTPUT_DIR}/{sample_id}/spades/scaffolds.fasta"
+    all_output_files_dict[sample_id]["spades"]["contigs_fasta"] = f"{TEST_OUTPUT_DIR}/{sample_id}/spades/contigs.fasta"
+
+    if not all_output_files_dict[sample_id]["assembly"]:
+        all_output_files_dict[sample_id]["spades"]["run_all_input"] = [
+            all_output_files_dict[sample_id]["fastqc"]["r1_zip"], all_output_files_dict[sample_id]["fastqc"]["r2_zip"], 
+            all_output_files_dict[sample_id]["fastqc"]["r1_html"], all_output_files_dict[sample_id]["fastqc"]["r2_html"],
+        ]
+    else:
+        all_output_files_dict[sample_id]["spades"]["run_all_input"] = []
+
+    # quast
+    all_output_files_dict[sample_id]["quast"]["conda"] = os.path.join(ROOT_DIR, "envs/quast.yaml")
+    all_output_files_dict[sample_id]["quast"]["outdir"] = f"{TEST_OUTPUT_DIR}/{sample_id}/quast"
+    all_output_files_dict[sample_id]["quast"]["report_html"] = f"{TEST_OUTPUT_DIR}/{sample_id}/quast/report.html"
+
+    all_output_files_dict[sample_id]["quast"]["run_all_input"] = [
+        all_output_files_dict[sample_id]["quast"]["report_html"]
+    ]
+
+    # prokka
+    all_output_files_dict[sample_id]["prokka"]["conda"] = os.path.join(ROOT_DIR, "envs/prokka.yaml")
+    all_output_files_dict[sample_id]["prokka"]["outdir"] = f"{TEST_OUTPUT_DIR}/{sample_id}/prokka"
+    all_output_files_dict[sample_id]["prokka"]["prefix"] = "Prokka"
+    all_output_files_dict[sample_id]["prokka"]["gff"] = \
+        f"{TEST_OUTPUT_DIR}/{sample_id}/prokka/{all_output_files_dict[sample_id]['prokka']['prefix']}.gff"
+    all_output_files_dict[sample_id]["prokka"]["run_all_input"] = [
+        all_output_files_dict[sample_id]["prokka"]["gff"]
+    ]
+
+    # abricate
+    all_output_files_dict[sample_id]["abricate"]["conda"] = os.path.join(ROOT_DIR, "envs/abricate.yaml")
+    all_output_files_dict[sample_id]["abricate"]["outdir"] = f"{TEST_OUTPUT_DIR}/{sample_id}/abricate"
+    all_output_files_dict[sample_id]["abricate"]["db_list"] = pipline_params["abricate"]["database"]
+    all_output_files_dict[sample_id]["abricate"]["out_db"] = dict()
+    for db in all_output_files_dict[sample_id]["abricate"]["db_list"]:
+        all_output_files_dict[sample_id]["abricate"]["out_db"][db] = \
+            f"{TEST_OUTPUT_DIR}/{sample_id}/abricate/{db}.tsv"
+
+    all_output_files_dict[sample_id]["abricate"]["run_all_input"] = list(
+        all_output_files_dict[sample_id]["abricate"]["out_db"].values())
+
+# INIT__/
+
+
+# \__RULES
+
+pprint(all_output_files_dict)
+rule all:
+    input:
+        list(chain.from_iterable(all_output_files_dict[sample_id]["fastqc"]["run_all_input"] for sample_id in all_output_files_dict)),
+        list(chain.from_iterable(all_output_files_dict[sample_id]["spades"]["run_all_input"] for sample_id in all_output_files_dict)),
+        list(chain.from_iterable(all_output_files_dict[sample_id]["quast"]["run_all_input"] for sample_id in all_output_files_dict)),
+        list(chain.from_iterable(all_output_files_dict[sample_id]["prokka"]["run_all_input"] for sample_id in all_output_files_dict)),
+        list(chain.from_iterable(all_output_files_dict[sample_id]["abricate"]["run_all_input"] for sample_id in all_output_files_dict))
+
+
+for _, row in samples.iterrows():
+    sample_id = row['sample_id']
+    assembly = all_output_files_dict[sample_id]["assembly"]
+
+    # fastqc
+    if read_1 and read_2:
+        rule:
+            name: f"fastqc_{sample_id}"
+            input:
+                all_output_files_dict[sample_id]["read_1"],
+                all_output_files_dict[sample_id]["read_2"]
+            output:
+                r1_zip=all_output_files_dict[sample_id]["fastqc"]["r1_zip"],
+                r2_zip=all_output_files_dict[sample_id]["fastqc"]["r2_zip"],
+                r1_html=all_output_files_dict[sample_id]["fastqc"]["r1_html"],
+                r2_html=all_output_files_dict[sample_id]["fastqc"]["r2_html"]
+            conda:
+                all_output_files_dict[sample_id]["fastqc"]["conda"]
+            params:
+                outdir=all_output_files_dict[sample_id]["fastqc"]["outdir"]
+            shell:
+                f"""
+                fastqc -o {{params.outdir}} {{input}}
+                """
+    
+    # spades
+    if not assembly:
+        rule:
+            name: f"spades_{sample_id}"
+            input:
+                r1 = all_output_files_dict[sample_id]["read_1"],
+                r2 = all_output_files_dict[sample_id]["read_2"]
+            output:
+                scaffolds_fast = all_output_files_dict[sample_id]["spades"]["scaffolds_fasta"],
+                contigs_fasta = all_output_files_dict[sample_id]["spades"]["contigs_fasta"]
+            conda:
+                all_output_files_dict[sample_id]["spades"]["conda"]
+            params:
+                outdir=all_output_files_dict[sample_id]["spades"]["outdir"]
+            shell:
+                f"""
+                spades.py --pe1-1 {{input.r1}} --pe1-2 {{input.r2}} -o {{params.outdir}}
+                """
+    
+    # quast
+    rule: 
+        name: f"quast_{sample_id}"
+        input:
+            assembly if assembly else all_output_files_dict[sample_id]["spades"]["scaffolds_fasta"]
+        output:
+            all_output_files_dict[sample_id]["quast"]["report_html"]
+        conda:
+            all_output_files_dict[sample_id]["quast"]["conda"]
+        params:
+            outdir = all_output_files_dict[sample_id]["quast"]["outdir"]
+        shell:
+            f"""
+            quast.py {input} -o {{params.outdir}}
+            """
+
+    # prokka
+    rule:
+        name: f"prokka_{sample_id}"
+        input:
+            assembly if assembly else all_output_files_dict[sample_id]["spades"]["scaffolds_fasta"]
+        output:
+            all_output_files_dict[sample_id]["prokka"]["gff"]
+        conda:
+            all_output_files_dict[sample_id]["prokka"]["conda"]
+        params:
+            outdir=all_output_files_dict[sample_id]["prokka"]["outdir"],
+            # genus = params['prokka']['genus']
+            prefix=all_output_files_dict[sample_id]["prokka"]["prefix"]
+        shell:
+            f"""
+            prokka --outdir {{params.outdir}} --prefix {{params.prefix}} --force {{input}} 
+            """
+
+    # abricate
+    for db in all_output_files_dict[sample_id]["abricate"]["db_list"]:
+        rule:
+            name: f'abricate_{sample_id}_{db}'
+            input:
+                assembly if assembly else f"{TEST_OUTPUT_DIR}/{sample_id}/spades/scaffolds.fasta"
+            output:
+                all_output_files_dict[sample_id]["abricate"]["out_db"][db]
+            conda:
+                all_output_files_dict[sample_id]["abricate"]["conda"]
+            params:
+                db = db
+            shell:
+                f"""
+                abricate --db {{params.db}} {{input}} > {{output}}
+                """
+
+# RULES__/

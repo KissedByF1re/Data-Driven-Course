@@ -1,0 +1,7 @@
+{
+    "global_params": {"inpdir": "test_input", "outdir": "test_output", "threads": 4},
+    "spades": {"threads": 4, "memory": "16G", "outdir": "spades_out"},
+    "quast" : {"reference": "/path/to/reference"},
+    "prokka": {"genus": "Escherichia", "outdir": "prokka_out"},
+    "abricate": {"database": ["ncbi", "ResFinder"]}
+ }
