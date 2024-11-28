@@ -1,0 +1,7 @@
+- "left reads":
+  - "/mnt/d/Projects/DD_2024_private/hw4/test_output/work/86/e0e40945cc41515298353c5e690f4d/SRR31122807_1.fastq.gz"
+  "number": !!int "1"
+  "orientation": "fr"
+  "right reads":
+  - "/mnt/d/Projects/DD_2024_private/hw4/test_output/work/86/e0e40945cc41515298353c5e690f4d/SRR31122807_2.fastq.gz"
+  "type": "paired-end"
